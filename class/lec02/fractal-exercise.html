@@ -244,6 +244,7 @@
         window.requestAnimationFrame(updateWebGL);
     }
 
+    // TODO do for angle what is being done for center and scale...
     ["fractalCenterX", "fractalCenterY"].forEach(function (name) {
         $("#" + name).slider({
             min: 0,
@@ -256,21 +257,14 @@
         max: 1000,
         value: 100
     });
-    $("#fractalRotate").slider({
-        min: 0,
-        max: 360,
-        value: 0
-    });
     runCanvas("webglCanvas02", "vertexShader", "fragmentShader02", function(gl, program) {
         var centerX = $("#fractalCenterX").slider("value") / 1000.0;
         var centerY = $("#fractalCenterY").slider("value") / 1000.0;
         var scale = $("#fractalScale").slider("value") / 1000.0;
-        var rotate = $("#fractalRotate").slider("value");
         scale = 0.1 + (9.99)*scale;
 
         gl.uniform2f(gl.getUniformLocation(program, "center"), centerX, centerY);
         gl.uniform1f(gl.getUniformLocation(program, "fractal_scale"), scale);
-        gl.uniform1f(gl.getUniformLocation(program, "fractal_rotate"), rotate);
     });
 </script>
 
