@@ -1,0 +1,1 @@
+This directory contains code for assignments for CS4621.  The lectures and the assignment writeups should live in the web directories rather than being duplicated here.
