@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>CS 4621: PPA2 -- Street View</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/cs4620.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="container">
+    <h1>CS 4621 PPA2 <span class="subtitle">Street View</span></h1>
+
+    <div align="center">
+        <canvas id="webglCanvas" style="border: none; background-color: black;" width="700" height="700"></canvas>
+    </div>
+
+    <h2>Team Members</h2>
+
+    <ul>
+        <li>Please list your team members with NetIDs in this unordered list.</li>
+        <li>Example: Steve Marschner (srm2)</li>
+    </ul>
+
+    <h2>Extra Features</h2>
+    <ul>
+        <li>Please describe any extra features you implemented here.</li>
+    </ul>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/exif.js"></script>
+<script src="js/preloadjs.min.js"></script>
+
+<script>
+    "use strict"
+
+    // This function takes as arguments a PreloadJS LoadQueue object (in which all images
+    // have previously been loaded), and a callback function. This function returns immediately,
+    // but the images will be processed asynchronously. When the metadata is ready, the input
+    // callback function will be called with a single argument, which is an array of objects
+    // that is the same length as the input queue. Each object in this array contains four fields:
+    // - id: A string which is the id associated with the image in the PreloadJS LoadQueue.
+    // - latitude: An array (length 3) of numbers, containing the degrees, minutes, and seconds of latitude north.
+    // - longitude: An array (length 3) of numbers, containing the degrees, minutes, and seconds of longitude west.
+    // - heading: An integer in the range [0, 359], representing the direction in the center of the panorama.
+    //   This is specified as a compass heading; that is, 0 degrees is north, and degrees increase as you turn clockwise.
+    // If an image does not contain the above tags, then the fields of its corresponding object may be left undefined. 
+    function getImageMetadata(queue, callback) {
+        let deepFind = function(obj, path) {
+            let pathsplit = path.split('.');
+            let current = obj;
+
+            for (let i=0; i < pathsplit.length; i++) {
+                if (current[pathsplit[i]] == undefined) {
+                    return undefined;
+                } else {
+                    current = current[pathsplit[i]];
+                }
+            }
+            return current;
+        }
+
+        let getGPS = function(image, imageID) {
+            return new Promise((resolve, reject) => {
+                EXIF.enableXmp();
+                EXIF.getData(image, () => {
+                    resolve({
+                        id: imageID,
+                        latitude: EXIF.getTag(image, "GPSLatitude"),
+                        longitude: EXIF.getTag(image, "GPSLongitude"),
+                        poseHeadingDegrees: deepFind(image, "xmpdata.x:xmpmeta.rdf:RDF.rdf:Description.@attributes.GPano:PoseHeadingDegrees"),
+                    });
+                });
+            });
+        }
+
+        let promises = [];
+        for (let queueItem of queue.getItems(true)) {
+            promises.push(getGPS(queueItem.rawResult, queueItem.item.id));
+        }
+        Promise.all(promises).then(callback);
+    }
+
+    //
+    // TODO: Fill in your code here and elsewhere in the HTML.
+    //
+
+</script>
+
+</body>
+</html>
