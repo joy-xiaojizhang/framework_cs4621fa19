@@ -19,3 +19,7 @@ Tasks:
 
 3. Set `radius=1` and `strength=-1`. What do you observe about the default behavior of texture wrapping? Modify the wrapping to clamp at the edge using `gl.texParameteri(...)` (refer to Lecture 5 Exhibit 1).
 
+Extra features:
+1. Read the lecture notes on interactions. Now change the `radius` control to use mouse dragging within the texture viewframe, i.e. dragging in the window from left to right changes the `radius` from 0 to 1. Also change `strength` control to use mouse scrolling within the texture frame. Hint: Mouse dragging detection can be achieved using a combination of `mousedown` and `mouseup`.
+
+2. The distortion causes some aliasing. Enable linear interpolation and mipmapping filters to make it smoother.

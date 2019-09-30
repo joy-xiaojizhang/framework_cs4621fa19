@@ -245,6 +245,7 @@
                 gl.bindTexture(gl.TEXTURE_2D, spongebobTexture);
 
                 // TODO: Make texture wrapping clamp to edge
+                // Extra TODO: Turn on linear interpolation & mipmapping
 
                 // Step 3: Set the uniform to the "index" of the texture unit you just activated.
                 var texture1Location = gl.getUniformLocation(program, "texture1");
@@ -254,6 +255,7 @@
             if (gl.getUniformLocation(program, "strength") != null) {
                 var strength = $("#strength").slider("value") / 100.0;
                 // TODO: Bind uniform variable for strength
+                // Extra TODO: Implement mouse scrolling
             }
 
             var canvas = document.getElementById("webglCanvas");
@@ -261,6 +263,7 @@
             if (gl.getUniformLocation(program, "radius") != null) {
                 var radius = $("#radius").slider("value") / 1000.0;
                 // TODO: Bind uniform variable for radius
+                // Extra TODO: Implement mouse dragging
             }
 
             drawShape(gl, program, rectangle);
